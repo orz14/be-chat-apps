@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "813066877816d95071be14b83a393e36",
+    "content-hash": "b8f5676b45afad0f1f4371b4c8f3a110",
     "packages": [
         {
             "name": "brick/math",
@@ -2600,6 +2600,50 @@
                 }
             ],
             "time": "2024-11-21T10:36:35+00:00"
+        },
+        {
+            "name": "orz14/object-id",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orz14/object-id.git",
+                "reference": "1fecbe540a74cbf20e341519ba6ac7f7ab2ec8b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orz14/object-id/zipball/1fecbe540a74cbf20e341519ba6ac7f7ab2ec8b8",
+                "reference": "1fecbe540a74cbf20e341519ba6ac7f7ab2ec8b8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ObjectId\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oriz Wahyu N.",
+                    "email": "oriezt.id@gmail.com"
+                }
+            ],
+            "description": "A package to generate Object IDs",
+            "homepage": "https://github.com/orz14/object-id",
+            "support": {
+                "issues": "https://github.com/orz14/object-id/issues",
+                "source": "https://github.com/orz14/object-id/tree/v1.1.2"
+            },
+            "time": "2024-06-16T18:56:30+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",

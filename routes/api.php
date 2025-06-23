@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,11 @@ Route::prefix('/auth')->group(function () {
 
     Route::get('/{provider}', [AuthController::class, 'redirectToProvider']);
     Route::get('/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('/rooms')->group(function () {
+        Route::get('/personal', [RoomController::class, 'personal']);
+        Route::get('/group', [RoomController::class, 'group']);
+    });
 });
