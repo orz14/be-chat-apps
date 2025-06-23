@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chat_messages', function (Blueprint $table) {
-            $table->string('id', 24)->primary();
+            $table->string('id', 26)->primary();
             $table->char('room_id', 24)->index();
             $table->foreign('room_id')->references('id')->on('rooms');
             $table->foreignId('sender_id')->constrained('users');
             $table->enum('type', ['text', 'image', 'file']);
             $table->text('content');
-            $table->timestamp('sent_at');
+            $table->timestamp('sent_at')->index();
         });
     }
 
