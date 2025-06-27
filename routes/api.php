@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,5 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/rooms')->group(function () {
         Route::get('/personal', [RoomController::class, 'personal']);
         Route::get('/group', [RoomController::class, 'group']);
+    });
+
+    Route::prefix('/chats')->group(function () {
+        Route::get('/{roomId}/{lastSentAt?}/{lastMessageId?}', [ChatController::class, 'loadChats']);
     });
 });
