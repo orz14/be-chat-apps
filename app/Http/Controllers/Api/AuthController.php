@@ -9,18 +9,23 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
+use Laravel\Socialite\Two\AbstractProvider;
 
 class AuthController extends Controller
 {
-    public function redirectToProvider($provider)
+    public function redirectToProvider($provider, SocialiteFactory $socialite)
     {
-        return Socialite::driver($provider)->stateless()->redirect();
+        /** @var AbstractProvider $driver */
+        $driver = $socialite->driver($provider);
+        return $driver->stateless()->redirect();
     }
 
-    public function handleProviderCallback(Request $request, $provider)
+    public function handleProviderCallback($provider, SocialiteFactory $socialite)
     {
-        $user = Socialite::driver($provider)->stateless()->user();
+        /** @var AbstractProvider $driver */
+        $driver = $socialite->driver($provider);
+        $user = $driver->stateless()->user();
 
         $authUser = $this->findOrCreateUser($user, $provider);
 

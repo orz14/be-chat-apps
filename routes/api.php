@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\RoomController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::prefix('/auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
@@ -38,5 +41,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('/chats')->group(function () {
         Route::get('/{roomId}/{lastSentAt?}/{lastMessageId?}', [ChatController::class, 'loadChats']);
+        Route::post('/send/text', [ChatController::class, 'sendText']);
     });
 });

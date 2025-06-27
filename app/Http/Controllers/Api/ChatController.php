@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\RoomEvent;
 use App\Helpers\Response;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ChatController extends Controller
 {
@@ -35,5 +38,34 @@ class ChatController extends Controller
             ->values();
 
         return Response::success(null, ['chats' => $chats]);
+    }
+
+    public function sendText(Request $request)
+    {
+        try {
+            $sentAt = Carbon::now()->toDateTimeString();
+
+            DB::table('chat_messages')->insert([
+                'id' => $request->id,
+                'room_id' => $request->room_id,
+                'sender_id' => $request->user()->id,
+                'type' => $request->type,
+                'content' => $request->content,
+                'sent_at' => $sentAt
+            ]);
+
+            broadcast(new RoomEvent($request->room_id, [
+                'id' => $request->id,
+                'sender_id' => $request->user()->id,
+                'content' => $request->content,
+                'sent_at' => $sentAt
+            ]));
+
+            return Response::success();
+        } catch (\Throwable $err) {
+            $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
+
+            return Response::error($err->getMessage(), null, $statusCode);
+        }
     }
 }
