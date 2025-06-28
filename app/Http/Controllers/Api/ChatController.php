@@ -56,7 +56,9 @@ class ChatController extends Controller
 
             broadcast(new RoomEvent($request->room_id, [
                 'id' => $request->id,
+                'room_id' => $request->room_id,
                 'sender_id' => $request->user()->id,
+                'type' => $request->type,
                 'content' => $request->content,
                 'sent_at' => $sentAt
             ]));
