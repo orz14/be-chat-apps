@@ -30,7 +30,17 @@ class ChatController extends Controller
             ->limit(20)
             ->get()
             ->reverse()
-            ->values();
+            ->values()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'room_id' => $item->room_id,
+                    'sender_id' => (int) $item->sender_id,
+                    'type' => $item->type,
+                    'content' => $item->content,
+                    'sent_at' => $item->sent_at
+                ];
+            });
 
         return Response::success(null, ['chats' => $chats]);
     }
@@ -52,7 +62,7 @@ class ChatController extends Controller
             broadcast(new RoomEvent($request->room_id, [
                 'id' => $request->id,
                 'room_id' => $request->room_id,
-                'sender_id' => $request->user()->id,
+                'sender_id' => (int) $request->user()->id,
                 'type' => $request->type,
                 'content' => $request->content,
                 'sent_at' => $sentAt
