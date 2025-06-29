@@ -35,11 +35,17 @@ class DatabaseSeeder extends Seeder
             'username' => 'orz2',
             'email' => 'oriezt5758@gmail.com'
         ]);
+        $user5 = DB::table('users')->insertGetId([
+            'name' => 'Kodim',
+            'username' => 'kodim',
+            'email' => 'adhymasfs@gmail.com'
+        ]);
 
         // Rooms
         $personalRoom1 = ObjectId::generate();
         $personalRoom2 = ObjectId::generate();
         $personalRoom3 = ObjectId::generate();
+        $personalRoom4 = ObjectId::generate();
         $groupRoom = ObjectId::generate();
 
         // Personal Room 1
@@ -84,6 +90,20 @@ class DatabaseSeeder extends Seeder
             'user_id' => $user4
         ]);
 
+        // Personal Room 4
+        DB::table('rooms')->insertGetId([
+            'id' => $personalRoom4,
+            'type' => 'personal'
+        ]);
+        DB::table('chat_rooms')->insert([
+            'room_id' => $personalRoom4,
+            'user_id' => $user1
+        ]);
+        DB::table('chat_rooms')->insert([
+            'room_id' => $personalRoom4,
+            'user_id' => $user5
+        ]);
+
         // Group Room
         DB::table('rooms')->insertGetId([
             'id' => $groupRoom,
@@ -105,6 +125,10 @@ class DatabaseSeeder extends Seeder
         DB::table('chat_rooms')->insert([
             'room_id' => $groupRoom,
             'user_id' => $user3
+        ]);
+        DB::table('chat_rooms')->insert([
+            'room_id' => $groupRoom,
+            'user_id' => $user5
         ]);
     }
 }

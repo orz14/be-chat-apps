@@ -33,14 +33,14 @@ Route::prefix('/auth')->group(function () {
     Route::get('/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/rooms')->group(function () {
         Route::get('/personal', [RoomController::class, 'personal']);
         Route::get('/group', [RoomController::class, 'group']);
     });
 
     Route::prefix('/chats')->group(function () {
-        Route::get('/{roomId}/{lastSentAt?}/{lastMessageId?}', [ChatController::class, 'loadChats']);
+        Route::get('/{roomId}/{lastSentAt?}/{lastMessageId?}', [ChatController::class, 'loadChats'])->middleware(['chatroom']);
         Route::post('/send/text', [ChatController::class, 'sendText']);
     });
 });

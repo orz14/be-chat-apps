@@ -12,13 +12,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ChatController extends Controller
 {
-    public function loadChats(Request $request, $roomId, $lastSentAt = null, $lastMessageId = null)
+    public function loadChats($roomId, $lastSentAt = null, $lastMessageId = null)
     {
-        $check = DB::table('chat_rooms')->where('room_id', $roomId)->where('user_id', $request->user()->id)->exists();
-        if (!$check) {
-            return Response::error('Anda tidak memiliki akses.', null, 403);
-        }
-
         $chats = DB::table('chat_messages')
             ->where('room_id', $roomId)
             ->when(!empty($lastSentAt) && !empty($lastMessageId), function ($q) use ($lastSentAt, $lastMessageId) {
