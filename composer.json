@@ -12,7 +12,10 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/socialite": "^5.21",
+        "laravel/tinker": "^2.8",
+        "orz14/object-id": "^1.1",
+        "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -28,7 +31,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/Generate.php",
+            "app/Helpers/Response.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -50,8 +57,8 @@
             "@php artisan key:generate --ansi"
         ],
         "setup-project": [
-            "composer install",
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "composer install",
             "php artisan key:generate --ansi",
             "php artisan optimize:clear --ansi"
         ]
