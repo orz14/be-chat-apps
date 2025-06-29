@@ -96,7 +96,7 @@ class AuthController extends Controller
 
         return Response::success(null, [
             'data' => [
-                'id' => $data->id,
+                'id' => (int) $data->id,
                 'name' => $data->name,
                 'username' => $data->username,
                 'email' => $data->email,
