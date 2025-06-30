@@ -14,21 +14,22 @@ class ChatController extends Controller
 {
     public function loadChats($roomId, $lastSentAt = null, $lastMessageId = null)
     {
-        $chats = DB::table('chat_messages')
-            ->where('room_id', $roomId)
+        $chats = DB::table('chat_messages as cm')
+            ->join('users as u', 'u.id', 'cm.sender_id')
+            ->where('cm.room_id', $roomId)
             ->when(!empty($lastSentAt) && !empty($lastMessageId), function ($q) use ($lastSentAt, $lastMessageId) {
-                $q->where(function ($query) use ($lastSentAt, $lastMessageId) {
-                    $query->where('sent_at', '<', $lastSentAt)
-                        ->orWhere(function ($query2) use ($lastSentAt, $lastMessageId) {
-                            $query2->where('sent_at', '=', $lastSentAt)
-                                ->where('id', '<', $lastMessageId);
+                $q->where(function ($q1) use ($lastSentAt, $lastMessageId) {
+                    $q1->where('cm.sent_at', '<', $lastSentAt)
+                        ->orWhere(function ($q2) use ($lastSentAt, $lastMessageId) {
+                            $q2->where('cm.sent_at', '=', $lastSentAt)
+                                ->where('cm.id', '<', $lastMessageId);
                         });
                 });
             })
-            ->orderBy('sent_at', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('cm.sent_at', 'desc')
+            ->orderBy('cm.id', 'desc')
             ->limit(20)
-            ->get()
+            ->get(['cm.*', 'u.username as sender_username'])
             ->reverse()
             ->values()
             ->map(function ($item) {
@@ -36,6 +37,7 @@ class ChatController extends Controller
                     'id' => $item->id,
                     'room_id' => $item->room_id,
                     'sender_id' => (int) $item->sender_id,
+                    'sender_username' => $item->sender_username,
                     'type' => $item->type,
                     'content' => $item->content,
                     'sent_at' => $item->sent_at
@@ -64,6 +66,7 @@ class ChatController extends Controller
                 'room_id' => $request->room_id,
                 'sender_id' => (int) $request->user()->id,
                 'sender_name' => $request->user()->name,
+                'sender_username' => $request->user()->username,
                 'type' => $request->type,
                 'content' => $request->content,
                 'sent_at' => $sentAt
