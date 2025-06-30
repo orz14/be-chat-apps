@@ -128,6 +128,10 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('chat_rooms')->insert([
             'room_id' => $groupRoom,
+            'user_id' => $user4
+        ]);
+        DB::table('chat_rooms')->insert([
+            'room_id' => $groupRoom,
             'user_id' => $user5
         ]);
     }

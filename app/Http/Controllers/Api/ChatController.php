@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\RoomEvent;
+use App\Events\UserMessageReceivedEvent;
 use App\Helpers\Response;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -70,7 +71,29 @@ class ChatController extends Controller
                 'type' => $request->type,
                 'content' => $request->content,
                 'sent_at' => $sentAt
-            ]));
+            ]))->toOthers();
+
+            // TODO: optimize using queue
+            $rooms = DB::table('chat_rooms as cr')
+                ->join('rooms as r', 'r.id', 'cr.room_id')
+                ->leftJoin('room_details as rd', 'rd.room_id', 'cr.room_id')
+                ->where('cr.room_id', $request->room_id)
+                ->get(['cr.user_id', 'r.type', 'rd.name']);
+
+            foreach ($rooms as $room) {
+                if ($room->user_id == $request->user()->id) continue; // kirim ke selain pengirim
+
+                broadcast(new UserMessageReceivedEvent($room->user_id, [
+                    'room_type' => $room->type,
+                    'room_name' => $room->name ?? null,
+                    'sender_id' => (int) $request->user()->id,
+                    'sender_name' => $request->user()->name,
+                    'sender_username' => $request->user()->username,
+                    'type' => $request->type,
+                    'content' => $request->content
+                ]))->toOthers();
+            }
+            // TODO: optimize using queue
 
             return Response::success();
         } catch (\Throwable $err) {
