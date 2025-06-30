@@ -63,6 +63,7 @@ class ChatController extends Controller
                 'id' => $request->id,
                 'room_id' => $request->room_id,
                 'sender_id' => (int) $request->user()->id,
+                'sender_name' => $request->user()->name,
                 'type' => $request->type,
                 'content' => $request->content,
                 'sent_at' => $sentAt
