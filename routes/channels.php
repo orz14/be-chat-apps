@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,6 @@ Broadcast::channel('user.{userId}', function ($user, $userId) {
     return (int) $user->id === (int) $userId;
 });
 
-Broadcast::channel('user.presence', function ($user) {
+Broadcast::channel('presence-user', function ($user) {
     return ['id' => $user->id];
 });
