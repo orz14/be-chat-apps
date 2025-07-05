@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,12 @@ Broadcast::channel('room.{roomId}', function ($user, $roomId) {
         ->where('room_id', $roomId)
         ->where('user_id', $user->id)
         ->exists();
+});
+
+Broadcast::channel('user.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
+Broadcast::channel('presence-user', function ($user) {
+    return ['id' => $user->id];
 });

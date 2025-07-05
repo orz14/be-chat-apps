@@ -25,7 +25,8 @@ class RoomController extends Controller
                 'r.type as room_type',
                 'cr1.room_id',
                 'u.name as room_name',
-                'u.avatar as room_picture'
+                'u.avatar as room_picture',
+                'u.id as user_id'
             ]);
 
         return Response::success(null, ['rooms' => $rooms]);

@@ -23,6 +23,7 @@ Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::prefix('/auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/current-user', [AuthController::class, 'currentUser']);
+        Route::delete('/logout', [AuthController::class, 'logout']);
     });
 
     Route::get('/{provider}', [AuthController::class, 'redirectToProvider']);
