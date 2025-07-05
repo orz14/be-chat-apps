@@ -98,7 +98,7 @@ class ChatController extends Controller
 
             return Response::success();
         } catch (\Throwable $err) {
-            Log::error('error sendText: ' . $err->getMessage());
+            Log::error('error ChatController sendText: ' . $err->getMessage());
             $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
 
             return Response::error($err->getMessage(), null, $statusCode);
