@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Laravel\Socialite\Two\AbstractProvider;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class AuthController extends Controller
 {
@@ -84,7 +85,7 @@ class AuthController extends Controller
 
             return (string) $token;
         } catch (\Throwable $err) {
-            Log::error('Error generating token: ' . $err->getMessage());
+            Log::error('error generateToken: ' . $err->getMessage());
 
             return null;
         }
@@ -103,5 +104,19 @@ class AuthController extends Controller
                 'avatar' => $data->avatar
             ]
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+
+            return Response::success();
+        } catch (\Throwable $err) {
+            Log::error('error logout: ' . $err->getMessage());
+            $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
+
+            return Response::error($err->getMessage(), null, $statusCode);
+        }
     }
 }

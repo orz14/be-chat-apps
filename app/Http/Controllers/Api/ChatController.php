@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ChatController extends Controller
@@ -97,6 +98,7 @@ class ChatController extends Controller
 
             return Response::success();
         } catch (\Throwable $err) {
+            Log::error('error sendText: ' . $err->getMessage());
             $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
 
             return Response::error($err->getMessage(), null, $statusCode);
