@@ -109,20 +109,29 @@ class AuthController extends Controller
 
     public function update(Request $request)
     {
-        if ($request->type == 'name') {
-            $update = [
-                'name' => $request->value
-            ];
-        } elseif ($request->type == 'username') {
-            $update = [
-                'username' => Str::slug($request->value, '-')
-            ];
+        switch ($request->type) {
+            case 'name':
+                $update = [
+                    'name' => $request->value
+                ];
+                break;
+            case 'username':
+                $update = [
+                    'username' => Str::slug($request->value, '-')
+                ];
+                break;
         }
 
         try {
             $request->user()->update($update);
 
-            return Response::success();
+            return Response::success(null, [
+                'user' => [
+                    'name' => $request->user()->name,
+                    'username' => $request->user()->username,
+                    'avatar' => $request->user()->avatar
+                ]
+            ]);
         } catch (\Throwable $err) {
             Log::error('error AuthController update: ' . $err->getMessage());
             $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
