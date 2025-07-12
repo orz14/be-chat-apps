@@ -3,6 +3,7 @@
 use App\Helpers\File;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\ShowFileController;
 use Illuminate\Http\Request;
@@ -24,8 +25,6 @@ Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::prefix('/auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/current-user', [AuthController::class, 'currentUser']);
-        Route::patch('/update', [AuthController::class, 'update']);
         Route::delete('/logout', [AuthController::class, 'logout']);
     });
 
@@ -34,6 +33,11 @@ Route::prefix('/auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('/profile')->group(function () {
+        Route::get('/current-user', [ProfileController::class, 'currentUser']);
+        Route::patch('/update', [ProfileController::class, 'update']);
+    });
+
     Route::prefix('/rooms')->group(function () {
         Route::get('/personal', [RoomController::class, 'personal']);
         Route::get('/group', [RoomController::class, 'group']);
@@ -54,7 +58,7 @@ Route::post('/image-store', function (Request $request) {
 
         return response()->json([
             'path' => $path,
-            'url' => File::get($path)
+            'url' => File::getAWSUrl($path)
         ], 200);
     } catch (\Throwable $err) {
         return response()->json(['error' => $err->getMessage()]);

@@ -11,7 +11,12 @@ class File
         return $attachment->store($path, 's3');
     }
 
-    public static function get($path): string
+    public static function getUrl($path): string
+    {
+        return url("/api/files/{$path}");
+    }
+
+    public static function getAWSUrl($path): string
     {
         return Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(10));
     }
@@ -19,7 +24,7 @@ class File
     public static function show($path)
     {
         try {
-            $file_url = self::get($path);
+            $file_url = self::getAWSUrl($path);
             $headers = get_headers($file_url, 1);
             $mime_type = 'application/octet-stream';
             if (isset($headers['Content-Type'])) {

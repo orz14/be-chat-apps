@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use App\Helpers\Generate;
 use App\Helpers\Response;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -89,56 +88,6 @@ class AuthController extends Controller
             Log::error('error AuthController generateToken: ' . $err->getMessage());
 
             return null;
-        }
-    }
-
-    public function currentUser(Request $request)
-    {
-        $user = $request->user();
-
-        return Response::success(null, [
-            'data' => [
-                'id' => (int) $user->id,
-                'name' => $user->name,
-                'username' => $user->username,
-                'email' => $user->email,
-                'avatar' => $user->avatar
-            ]
-        ]);
-    }
-
-    public function update(Request $request)
-    {
-        switch ($request->type) {
-            case 'name':
-                $update = [
-                    'name' => $request->value
-                ];
-                break;
-            case 'username':
-                $update = [
-                    'username' => Str::slug($request->value, '-')
-                ];
-                break;
-        }
-
-        $user = $request->user();
-
-        try {
-            $user->update($update);
-
-            return Response::success(null, [
-                'user' => [
-                    'name' => $user->name,
-                    'username' => $user->username,
-                    'avatar' => $user->avatar
-                ]
-            ]);
-        } catch (\Throwable $err) {
-            Log::error('error AuthController update: ' . $err->getMessage());
-            $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
-
-            return Response::error($err->getMessage(), null, $statusCode);
         }
     }
 
