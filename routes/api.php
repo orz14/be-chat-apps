@@ -1,8 +1,10 @@
 <?php
 
+use App\Helpers\File;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\ShowFileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -41,4 +43,33 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{roomId}/{lastSentAt?}/{lastMessageId?}', [ChatController::class, 'loadChats'])->middleware(['chatroom']);
         Route::post('/send/text', [ChatController::class, 'sendText']);
     });
+
+    Route::get('/files/{path}', ShowFileController::class)->where('path', '.*');
+});
+
+// Testing
+Route::post('/image-store', function (Request $request) {
+    try {
+        $path = File::store($request->file('image'), "users/IniUserId/chats/IniRoomId");
+
+        return response()->json([
+            'path' => $path,
+            'url' => File::get($path)
+        ], 200);
+    } catch (\Throwable $err) {
+        return response()->json(['error' => $err->getMessage()]);
+    }
+});
+
+Route::delete('/image-delete', function () {
+    try {
+        $var = File::delete('users/IniUserId2/avatar/OcIHUOijWZG2c95ooLwR3vYTz6FqEEckampN2VvK.png');
+
+        return response()->json([
+            'var' => $var,
+            'message' => 'File deleted successfully'
+        ], 200);
+    } catch (\Throwable $err) {
+        return response()->json(['error' => $err->getMessage()]);
+    }
 });

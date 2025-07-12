@@ -94,15 +94,15 @@ class AuthController extends Controller
 
     public function currentUser(Request $request)
     {
-        $data = $request->user();
+        $user = $request->user();
 
         return Response::success(null, [
             'data' => [
-                'id' => (int) $data->id,
-                'name' => $data->name,
-                'username' => $data->username,
-                'email' => $data->email,
-                'avatar' => $data->avatar
+                'id' => (int) $user->id,
+                'name' => $user->name,
+                'username' => $user->username,
+                'email' => $user->email,
+                'avatar' => $user->avatar
             ]
         ]);
     }
@@ -122,14 +122,16 @@ class AuthController extends Controller
                 break;
         }
 
+        $user = $request->user();
+
         try {
-            $request->user()->update($update);
+            $user->update($update);
 
             return Response::success(null, [
                 'user' => [
-                    'name' => $request->user()->name,
-                    'username' => $request->user()->username,
-                    'avatar' => $request->user()->avatar
+                    'name' => $user->name,
+                    'username' => $user->username,
+                    'avatar' => $user->avatar
                 ]
             ]);
         } catch (\Throwable $err) {
