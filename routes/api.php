@@ -43,9 +43,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{roomId}/{lastSentAt?}/{lastMessageId?}', [ChatController::class, 'loadChats'])->middleware(['chatroom']);
         Route::post('/send/text', [ChatController::class, 'sendText']);
     });
-
-    Route::get('/files/{path}', ShowFileController::class)->where('path', '.*');
 });
+
+Route::get('/files/{path}', ShowFileController::class)->where('path', '.*');
 
 // Testing
 Route::post('/image-store', function (Request $request) {
