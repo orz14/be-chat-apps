@@ -14,6 +14,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.21",
         "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "orz14/object-id": "^1.1",
         "pusher/pusher-php-server": "^7.2"
     },
@@ -34,7 +35,8 @@
         },
         "files": [
             "app/Helpers/Generate.php",
-            "app/Helpers/Response.php"
+            "app/Helpers/Response.php",
+            "app/Helpers/File.php"
         ]
     },
     "autoload-dev": {

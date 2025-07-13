@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Helpers\Generate;
 use App\Helpers\Response;
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
 use Laravel\Socialite\Two\AbstractProvider;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class AuthController extends Controller
@@ -85,25 +85,10 @@ class AuthController extends Controller
 
             return (string) $token;
         } catch (\Throwable $err) {
-            Log::error('error generateToken: ' . $err->getMessage());
+            Log::error('error AuthController generateToken: ' . $err->getMessage());
 
             return null;
         }
-    }
-
-    public function currentUser(Request $request)
-    {
-        $data = $request->user();
-
-        return Response::success(null, [
-            'data' => [
-                'id' => (int) $data->id,
-                'name' => $data->name,
-                'username' => $data->username,
-                'email' => $data->email,
-                'avatar' => $data->avatar
-            ]
-        ]);
     }
 
     public function logout(Request $request)
@@ -113,7 +98,7 @@ class AuthController extends Controller
 
             return Response::success();
         } catch (\Throwable $err) {
-            Log::error('error logout: ' . $err->getMessage());
+            Log::error('error AuthController logout: ' . $err->getMessage());
             $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
 
             return Response::error($err->getMessage(), null, $statusCode);
