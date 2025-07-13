@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class File
@@ -36,6 +37,7 @@ class File
                 ->header('Content-Type', $mime_type)
                 ->header('Content-Disposition', 'inline; filename="' . basename($path) . '"');
         } catch (\Throwable $err) {
+            Log::error('error FileHelper show: ' . $err->getMessage());
             throw $err;
         }
     }

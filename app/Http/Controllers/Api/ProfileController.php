@@ -7,7 +7,6 @@ use App\Helpers\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -54,7 +53,7 @@ class ProfileController extends Controller
 
         try {
             if ($request->type == 'avatar' && $request->hasFile('value')) {
-                if (isset($user->avatar) && Storage::disk('s3')->exists($user->avatar)) {
+                if (isset($user->avatar)) {
                     File::delete($user->avatar);
                 }
                 $path = File::store($request->file('value'), "users/{$user->id}/avatar");
@@ -71,7 +70,7 @@ class ProfileController extends Controller
                 ]
             ]);
         } catch (\Throwable $err) {
-            Log::error('error AuthController update: ' . $err->getMessage());
+            Log::error('error ProfileController update: ' . $err->getMessage());
             $statusCode = $err instanceof HttpExceptionInterface ? $err->getStatusCode() : 500;
 
             return Response::error($err->getMessage(), null, $statusCode);
